@@ -1,1 +1,35 @@
+ int ne555OutPin = 34;
+const int sensorPin = 35;
+const int sensorPin2 = 32;
+
+void setup() {
+
+  Serial.begin(9600);
+  pinMode(ne555OutPin, INPUT_PULLDOWN);
+
+}
+
+void loop() {
+
+  int pulseCount = pulseIn(ne555OutPin, HIGH);
+  Serial.print("Pulse per sec= ");
+  Serial.print(pulseCount);
+  Serial.println(" MV");
+  delay(1000);
+
+  int sensorValue = analogRead(sensorPin);
+  float pressure = map(sensorValue, 0, 4095, 0, 100);
+  Serial.print("Force Sensor 1: ");
+  Serial.print(pressure);
+  Serial.println(" N");
+  delay(1000);
+
+  int sensorValue2 = analogRead(sensorPin2);
+  float pressure2 = map(sensorValue2, 0, 4095, 0, 100);
+  Serial.print("Force Sensor 2: ");
+  Serial.print(pressure2);
+  Serial.println(" N");
+  delay(1000);
+
+}
 

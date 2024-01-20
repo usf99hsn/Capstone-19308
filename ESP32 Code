@@ -1,6 +1,6 @@
- int ne555OutPin = 34;
-const int sensorPin = 35;
-const int sensorPin2 = 32;
+ const int ne555OutPin = 34;
+ const int sensorPin = 35;
+ const int sensorPin2 = 32;
 
 void setup() {
 
@@ -18,18 +18,17 @@ void loop() {
   delay(1000);
 
   int sensorValue = analogRead(sensorPin);
-  float pressure = map(sensorValue, 0, 4095, 0, 100);
-  Serial.print("Force Sensor 1: ");
-  Serial.print(pressure);
+  float pressure = map(sensorValue, 0, 1023, 100, 0);
+  Serial.print("Force 1: ");
+  Serial.print(sensorValue);
   Serial.println(" N");
   delay(1000);
 
   int sensorValue2 = analogRead(sensorPin2);
-  float pressure2 = map(sensorValue2, 0, 4095, 0, 100);
-  Serial.print("Force Sensor 2: ");
-  Serial.print(pressure2);
+  float pressure2 = map(sensorValue, 0, 1023, 100, 0);
+  Serial.print("Force 2: ");
+  Serial.print(sensorValue2);
   Serial.println(" N");
   delay(1000);
 
 }
-

@@ -1,34 +1,66 @@
- const int ne555OutPin = 34;
- const int sensorPin = 35;
- const int sensorPin2 = 32;
+#include <BTAddress.h>
+#include <BTAdvertisedDevice.h>
+#include <BTScan.h>
+#include <BluetoothSerial.h>
+
+#include "BluetoothSerial.h"
+
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+
+BluetoothSerial SerialBT;
+
+const int ne555OutPin = 34;
+int sensorPin = 35;
+int sensorPin2 = 32;
+int led = 5;
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
+  SerialBT.begin("ESP32test");
   pinMode(ne555OutPin, INPUT_PULLDOWN);
+  pinMode(led,OUTPUT);
 
 }
+
+String myCmd;
 
 void loop() {
 
   int pulseCount = pulseIn(ne555OutPin, HIGH);
-  Serial.print("Pulse per sec= ");
-  Serial.print(pulseCount);
-  Serial.println(" MV");
+  SerialBT.print(pulseCount);
+  SerialBT.print(";");
   delay(1000);
 
   int sensorValue = analogRead(sensorPin);
   float pressure = map(sensorValue, 0, 1023, 100, 0);
-  Serial.print("Force 1: ");
-  Serial.print(sensorValue);
-  Serial.println(" N");
+  SerialBT.print(sensorValue);
+  SerialBT.print("&");
   delay(1000);
 
   int sensorValue2 = analogRead(sensorPin2);
   float pressure2 = map(sensorValue, 0, 1023, 100, 0);
-  Serial.print("Force 2: ");
-  Serial.print(sensorValue2);
-  Serial.println(" N");
+  SerialBT.print(sensorValue);
+  SerialBT.print("$");
   delay(1000);
+
+  if(Serial.available()){
+    
+    myCmd = Serial.readStringUntil(';');
+    
+    if(myCmd == "on"){
+      digitalWrite(led, HIGH);
+      SerialBT.print("1");
+      SerialBT.print("@");
+    }
+    else if (myCmd == "off"){
+      digitalWrite(led, LOW);
+      SerialBT.print("0");
+      SerialBT.print("@");
+    }
+
+  }
 
 }
